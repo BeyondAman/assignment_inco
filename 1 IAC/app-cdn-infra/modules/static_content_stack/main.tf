@@ -47,11 +47,12 @@ module "cdn" {
     }
   }
 
-  path_behaviors = [
-    { path_pattern = "/auth/*",      target_origin_id = "origin-auth-${var.env}" },
-    { path_pattern = "/info/*",      target_origin_id = "origin-info-${var.env}" },
-    { path_pattern = "/customers/*", target_origin_id = "origin-customers-${var.env}" }
-  ]
+path_behaviors = [
+  { path_pattern = "*",            target_origin_id = "origin-auth-${var.env}" },
+  { path_pattern = "/auth/*",      target_origin_id = "origin-auth-${var.env}" },
+  { path_pattern = "/info/*",      target_origin_id = "origin-info-${var.env}" },
+  { path_pattern = "/customers/*", target_origin_id = "origin-customers-${var.env}" }
+]
 
   acm_certificate_arn = var.acm_certificate_arn
   waf_web_acl_arn     = var.waf_web_acl_arn
