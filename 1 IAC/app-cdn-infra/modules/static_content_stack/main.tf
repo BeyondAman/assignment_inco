@@ -1,7 +1,7 @@
 
 module "bucket_auth" {
   source      = "../s3_bucket_secure"
-  name        = "${var.bucket_name_prefix}-auth-${var.env}"
+  name        = "${var.bucket_name_prefix}-auth"
   region      = var.region
   enable_kms  = true
   tags        = merge(var.tags, { purpose = "auth" })
@@ -9,7 +9,7 @@ module "bucket_auth" {
 
 module "bucket_info" {
   source      = "../s3_bucket_secure"
-  name        = "${var.bucket_name_prefix}-info-${var.env}"
+  name        = "${var.bucket_name_prefix}-info"
   region      = var.region
   enable_kms  = true
   tags        = merge(var.tags, { purpose = "info" })
@@ -17,7 +17,7 @@ module "bucket_info" {
 
 module "bucket_customers" {
   source      = "../s3_bucket_secure"
-  name        = "${var.bucket_name_prefix}-customers-${var.env}"
+  name        = "${var.bucket_name_prefix}-customers"
   region      = var.region
   enable_kms  = true
   tags        = merge(var.tags, { purpose = "customers" })
