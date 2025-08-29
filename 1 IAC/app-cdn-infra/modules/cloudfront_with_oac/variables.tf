@@ -1,5 +1,7 @@
 variable "env"                 { type = string }
+
 variable "region"              { type = string }
+
 variable "origins"             {
   description = "Map of origin_id => { domain_name, origin_path (optional), s3_bucket_arn }"
   type = map(object({
@@ -8,6 +10,7 @@ variable "origins"             {
     s3_bucket_arn = string
   }))
 }
+
 variable "path_behaviors" {
   description = "Ordered list of { path_pattern, target_origin_id }"
   type = list(object({
@@ -15,6 +18,23 @@ variable "path_behaviors" {
     target_origin_id = string
   }))
 }
-variable "acm_certificate_arn" { type = string  default = "" }
-variable "waf_web_acl_arn"     { type = string  default = "" }
-variable "tags"                { type = map(string) default = {} }
+
+variable "acm_certificate_arn" { 
+  type = string 
+  default = ""
+}
+
+variable "waf_web_acl_arn"     { 
+  type = string 
+  default = ""
+}
+
+variable "tags"                { 
+  type = map(string)
+  default = {}
+}
+
+variable "origin_s3_bucket_arn" {
+  type        = string
+  description = "The ARN of the S3 bucket used as a CloudFront origin."
+}

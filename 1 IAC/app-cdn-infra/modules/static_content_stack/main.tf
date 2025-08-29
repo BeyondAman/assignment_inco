@@ -34,17 +34,17 @@ module "cdn" {
 
   origins = {
     "origin-auth-${var.env}" = {
-      domain_name   = module.bucket_auth.bucket_name + ".s3.amazonaws.com"
+      domain_name = "${module.bucket_auth.bucket_name}.s3.amazonaws.com"
       origin_path   = ""
       s3_bucket_arn = module.bucket_auth.bucket_arn
     }
     "origin-info-${var.env}" = {
-      domain_name   = module.bucket_info.bucket_name + ".s3.amazonaws.com"
+      domain_name = "${module.bucket_info.bucket_name}.s3.amazonaws.com"
       origin_path   = ""
       s3_bucket_arn = module.bucket_info.bucket_arn
     }
     "origin-customers-${var.env}" = {
-      domain_name   = module.bucket_customers.bucket_name + ".s3.amazonaws.com"
+      domain_name = "${module.bucket_customers.bucket_name}.s3.amazonaws.com"
       origin_path   = ""
       s3_bucket_arn = module.bucket_customers.bucket_arn
     }

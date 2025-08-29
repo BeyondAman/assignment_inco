@@ -65,12 +65,15 @@ resource "aws_cloudfront_distribution" "this" {
     ssl_support_method             = var.acm_certificate_arn == "" ? null : "sni-only"
   }
 
-  restrictions { geo_restriction { restriction_type = "none" } }
+  restrictions { 
+    geo_restriction { 
+      restriction_type = "none" 
+      } 
+      }
   tags = var.tags
 
   web_acl_id = var.waf_web_acl_arn != "" ? var.waf_web_acl_arn : null
 }
-
 
 resource "aws_s3_bucket_policy" "origin_read" {
   for_each = var.origins
@@ -80,4 +83,21 @@ resource "aws_s3_bucket_policy" "origin_read" {
 
 output "distribution_arn" {
   value = aws_cloudfront_distribution.this.arn
+}
+
+data "aws_iam_policy_document" "oac_read" {
+  statement {
+    principals {
+      type        = "Service"
+      identifiers = ["cloudfront.amazonaws.com"]
+    }
+
+    actions = [
+      "s3:GetObject"
+    ]
+
+    resources = [
+      "${var.origin_s3_bucket_arn}/*"
+    ]
+  }
 }

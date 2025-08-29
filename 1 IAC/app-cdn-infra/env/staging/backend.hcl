@@ -1,4 +1,4 @@
-bucket       = "tfstate-staging-beyondinco"
+bucket       = "tfstate-stg-beyondinco"
 key          = "state/terraform.tfstate"
 region       = "us-east-1"
 encrypt      = true
