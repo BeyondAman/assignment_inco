@@ -1,13 +1,10 @@
-locals {
-  common_tags = merge(var.tags, { project = "beyond_inco", environment = var.env })
-}
 
 module "bucket_auth" {
   source      = "../s3_bucket_secure"
-  name        = "storage-bucket1-${var.env}-beyondinco"
+  name        = "${var.bucket_name_prefix}-auth-${var.env}"
   region      = var.region
   enable_kms  = true
-  tags        = merge(local.common_tags, { purpose = "auth" })
+  tags        = merge(var.tags, { purpose = "auth" })
 }
 
 module "bucket_info" {
@@ -15,7 +12,7 @@ module "bucket_info" {
   name        = "${var.bucket_name_prefix}-info-${var.env}"
   region      = var.region
   enable_kms  = true
-  tags        = merge(local.common_tags, { purpose = "info" })
+  tags        = merge(var.tags, { purpose = "info" })
 }
 
 module "bucket_customers" {
@@ -23,28 +20,28 @@ module "bucket_customers" {
   name        = "${var.bucket_name_prefix}-customers-${var.env}"
   region      = var.region
   enable_kms  = true
-  tags        = merge(local.common_tags, { purpose = "customers" })
+  tags        = merge(var.tags, { purpose = "customers" })
 }
 
 module "cdn" {
   source  = "../cloudfront_with_oac"
   env     = var.env
   region  = var.region
-  tags    = local.common_tags
+  tags    = var.tags
 
   origins = {
     "origin-auth-${var.env}" = {
-      domain_name = "${module.bucket_auth.bucket_name}.s3.amazonaws.com"
+      domain_name   = "${module.bucket_auth.bucket_name}.s3.amazonaws.com"
       origin_path   = ""
       s3_bucket_arn = module.bucket_auth.bucket_arn
     }
     "origin-info-${var.env}" = {
-      domain_name = "${module.bucket_info.bucket_name}.s3.amazonaws.com"
+      domain_name   = "${module.bucket_info.bucket_name}.s3.amazonaws.com"
       origin_path   = ""
       s3_bucket_arn = module.bucket_info.bucket_arn
     }
     "origin-customers-${var.env}" = {
-      domain_name = "${module.bucket_customers.bucket_name}.s3.amazonaws.com"
+      domain_name   = "${module.bucket_customers.bucket_name}.s3.amazonaws.com"
       origin_path   = ""
       s3_bucket_arn = module.bucket_customers.bucket_arn
     }
@@ -77,6 +74,7 @@ data "aws_iam_policy_document" "auth_policy" {
     }
   }
 }
+
 data "aws_iam_policy_document" "info_policy" {
   statement {
     sid     = "AllowCloudFrontReadViaOAC"
@@ -94,6 +92,7 @@ data "aws_iam_policy_document" "info_policy" {
     }
   }
 }
+
 data "aws_iam_policy_document" "customers_policy" {
   statement {
     sid     = "AllowCloudFrontReadViaOAC"
@@ -115,4 +114,4 @@ data "aws_iam_policy_document" "customers_policy" {
 output "auth_bucket"      { value = module.bucket_auth.bucket_name }
 output "info_bucket"      { value = module.bucket_info.bucket_name }
 output "customers_bucket" { value = module.bucket_customers.bucket_name }
-output "distribution_id"  { value = module.cdn.aws_cloudfront_distribution_this_id }
+output "distribution_id"  { value = module.cdn.distribution_id }

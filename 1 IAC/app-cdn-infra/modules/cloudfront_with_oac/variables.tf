@@ -19,22 +19,17 @@ variable "path_behaviors" {
   }))
 }
 
-variable "acm_certificate_arn" { 
-  type = string 
+variable "acm_certificate_arn" {
+  type = string
   default = ""
 }
 
-variable "waf_web_acl_arn"     { 
-  type = string 
+variable "waf_web_acl_arn"     {
+  type = string
   default = ""
 }
 
-variable "tags"                { 
+variable "tags"                {
   type = map(string)
   default = {}
-}
-
-variable "origin_s3_bucket_arn" {
-  type        = string
-  description = "The ARN of the S3 bucket used as a CloudFront origin."
 }

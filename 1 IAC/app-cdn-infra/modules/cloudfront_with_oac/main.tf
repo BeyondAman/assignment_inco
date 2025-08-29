@@ -14,12 +14,9 @@ resource "aws_cloudfront_distribution" "this" {
   dynamic "origin" {
     for_each = var.origins
     content {
-      domain_name = origin.value.domain_name
-      origin_id   = origin.key
-      origin_path = try(origin.value.origin_path, "")
-      s3_origin_config {
-        origin_access_identity = null
-      }
+      domain_name              = origin.value.domain_name
+      origin_id                = origin.key
+      origin_path              = try(origin.value.origin_path, "")
       origin_access_control_id = aws_cloudfront_origin_access_control.oac.id
     }
   }
@@ -68,8 +65,8 @@ resource "aws_cloudfront_distribution" "this" {
   restrictions { 
     geo_restriction { 
       restriction_type = "none" 
-      } 
-      }
+    } 
+  }
   tags = var.tags
 
   web_acl_id = var.waf_web_acl_arn != "" ? var.waf_web_acl_arn : null
@@ -81,23 +78,20 @@ resource "aws_s3_bucket_policy" "origin_read" {
   policy   = data.aws_iam_policy_document.oac_read[each.key].json
 }
 
-output "distribution_arn" {
-  value = aws_cloudfront_distribution.this.arn
-}
 
 data "aws_iam_policy_document" "oac_read" {
+  for_each = var.origins
+
   statement {
     principals {
       type        = "Service"
       identifiers = ["cloudfront.amazonaws.com"]
     }
-
     actions = [
       "s3:GetObject"
     ]
-
     resources = [
-      "${var.origin_s3_bucket_arn}/*"
+      "${each.value.s3_bucket_arn}/*"
     ]
   }
 }
