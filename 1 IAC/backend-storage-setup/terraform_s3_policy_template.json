@@ -1,0 +1,44 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListBucketForStateAccess",
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
+      "Resource": "BUCKET_ARN_PLACEHOLDER"
+    },
+    {
+      "Sid": "ManageTerraformStateFiles",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
+      "Resource": [
+        "BUCKET_ARN_PLACEHOLDER/state/terraform.tfstate"
+      ]
+    },
+    {
+      "Sid": "ManageTerraformLockFiles",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": [
+        "BUCKET_ARN_PLACEHOLDER/state/terraform.tfstate.tflock"
+      ]
+    },
+    {
+      "Sid": "ManageTerraformStateKMSKey",
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:GenerateDataKey"
+      ],
+      "Resource": "KMS_KEY_ARN_PLACEHOLDER"
+    }
+  ]
+}
