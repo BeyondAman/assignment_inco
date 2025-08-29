@@ -12,7 +12,7 @@ module "bucket_auth" {
 
 module "bucket_info" {
   source      = "../s3_bucket_secure"
-  name        = "storage-bucket2-${var.env}-beyondinco"
+  name        = "${var.bucket_name_prefix}-info-${var.env}"
   region      = var.region
   enable_kms  = true
   tags        = merge(local.common_tags, { purpose = "info" })
@@ -20,7 +20,7 @@ module "bucket_info" {
 
 module "bucket_customers" {
   source      = "../s3_bucket_secure"
-  name        = "storage-bucket3-${var.env}-beyondinco"
+  name        = "${var.bucket_name_prefix}-customers-${var.env}"
   region      = var.region
   enable_kms  = true
   tags        = merge(local.common_tags, { purpose = "customers" })
@@ -58,6 +58,58 @@ module "cdn" {
 
   acm_certificate_arn = var.acm_certificate_arn
   waf_web_acl_arn     = var.waf_web_acl_arn
+}
+
+data "aws_iam_policy_document" "auth_policy" {
+  statement {
+    sid     = "AllowCloudFrontReadViaOAC"
+    effect  = "Allow"
+    actions = ["s3:GetObject"]
+    principals {
+      type        = "Service"
+      identifiers = ["cloudfront.amazonaws.com"]
+    }
+    resources = ["${module.bucket_auth.bucket_arn}/*"]
+    condition {
+      test     = "StringEquals"
+      variable = "AWS:SourceArn"
+      values   = [module.cdn.distribution_arn]
+    }
+  }
+}
+data "aws_iam_policy_document" "info_policy" {
+  statement {
+    sid     = "AllowCloudFrontReadViaOAC"
+    effect  = "Allow"
+    actions = ["s3:GetObject"]
+    principals {
+      type        = "Service"
+      identifiers = ["cloudfront.amazonaws.com"]
+    }
+    resources = ["${module.bucket_info.bucket_arn}/*"]
+    condition {
+      test     = "StringEquals"
+      variable = "AWS:SourceArn"
+      values   = [module.cdn.distribution_arn]
+    }
+  }
+}
+data "aws_iam_policy_document" "customers_policy" {
+  statement {
+    sid     = "AllowCloudFrontReadViaOAC"
+    effect  = "Allow"
+    actions = ["s3:GetObject"]
+    principals {
+      type        = "Service"
+      identifiers = ["cloudfront.amazonaws.com"]
+    }
+    resources = ["${module.bucket_customers.bucket_arn}/*"]
+    condition {
+      test     = "StringEquals"
+      variable = "AWS:SourceArn"
+      values   = [module.cdn.distribution_arn]
+    }
+  }
 }
 
 output "auth_bucket"      { value = module.bucket_auth.bucket_name }
