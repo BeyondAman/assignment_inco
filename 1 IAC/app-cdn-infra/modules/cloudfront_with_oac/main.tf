@@ -1,10 +1,11 @@
 resource "aws_cloudfront_origin_access_control" "oac" {
-  name                              = "oac-${var.env}"
-  description                       = "OAC for ${var.env}"
-  origin_access_control_origin_type = "s3"
-  signing_behavior                  = "always"
-  signing_protocol                  = "sigv4"
+  name                                      = "oac-${var.env}"
+  origin_access_control_origin_type         = "s3"
+  signing_behavior                          = "always"
+  signing_protocol                          = "sigv4"
+  description                              = "OAC for ${var.env} environment"
 }
+
 
 resource "aws_cloudfront_distribution" "this" {
   enabled             = true
@@ -18,6 +19,7 @@ resource "aws_cloudfront_distribution" "this" {
       domain_name              = origin.value.domain_name
       origin_id                = origin.key
       origin_path              = try(origin.value.origin_path, "")
+      origin_access_control_id = aws_cloudfront_origin_access_control.oac.id
     }
   }
 
