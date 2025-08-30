@@ -5,7 +5,6 @@ module "bucket_auth" {
   region      = var.region
   enable_kms  = true
   tags        = merge(var.tags, { purpose = "auth" })
-  policy_json = data.aws_iam_policy_document.auth_policy.json
 }
 
 module "bucket_info" {
@@ -14,7 +13,6 @@ module "bucket_info" {
   region      = var.region
   enable_kms  = true
   tags        = merge(var.tags, { purpose = "info" })
-  policy_json = data.aws_iam_policy_document.info_policy.json
 }
 
 module "bucket_customers" {
@@ -23,7 +21,6 @@ module "bucket_customers" {
   region      = var.region
   enable_kms  = true
   tags        = merge(var.tags, { purpose = "customers" })
-  policy_json = data.aws_iam_policy_document.customers_policy.json
 }
 
 module "cdn" {

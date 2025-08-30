@@ -10,6 +10,7 @@ resource "aws_cloudfront_distribution" "this" {
   enabled             = true
   is_ipv6_enabled     = true
   price_class         = "PriceClass_100"
+  default_root_object = "index.html" 
 
   dynamic "origin" {
     for_each = var.origins

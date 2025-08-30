@@ -40,14 +40,6 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
   }
 }
 
-resource "aws_s3_bucket_policy" "origin_read" {
-  count  = var.policy_json != "" ? 1 : 0
-  bucket = aws_s3_bucket.this.id
-  policy = var.policy_json
-}
-
-
-
 output "bucket_name" { value = aws_s3_bucket.this.bucket }
 output "bucket_arn"  { value = aws_s3_bucket.this.arn }
 output "kms_key_arn" { value = try(aws_kms_key.cmk[0].arn, null) }
