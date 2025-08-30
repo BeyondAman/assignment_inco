@@ -318,7 +318,7 @@ def main():
         print(f"  terraform {{")
         print(f"    backend \"s3\" {{")
         print(f"      bucket       = \"{full_bucket_name}\"")
-        print(f"      key          = \"{env}/terraform.tfstate\"")
+        print(f"      key          = \"state/terraform.tfstate\"")
         print(f"      region       = \"{AWS_REGION}\"")
         print(f"      encrypt      = true")
         print(f"      use_lockfile = true")
