@@ -71,27 +71,3 @@ resource "aws_cloudfront_distribution" "this" {
 
   web_acl_id = var.waf_web_acl_arn != "" ? var.waf_web_acl_arn : null
 }
-
-resource "aws_s3_bucket_policy" "origin_read" {
-  for_each = var.origins
-  bucket   = split(":::", each.value.s3_bucket_arn)[1] == null ? replace(each.value.s3_bucket_arn, "arn:aws:s3:::", "") : replace(each.value.s3_bucket_arn, "arn:aws:s3:::", "")
-  policy   = data.aws_iam_policy_document.oac_read[each.key].json
-}
-
-
-data "aws_iam_policy_document" "oac_read" {
-  for_each = var.origins
-
-  statement {
-    principals {
-      type        = "Service"
-      identifiers = ["cloudfront.amazonaws.com"]
-    }
-    actions = [
-      "s3:GetObject"
-    ]
-    resources = [
-      "${each.value.s3_bucket_arn}/*"
-    ]
-  }
-}

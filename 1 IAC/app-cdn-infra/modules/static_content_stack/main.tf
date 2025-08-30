@@ -5,6 +5,7 @@ module "bucket_auth" {
   region      = var.region
   enable_kms  = true
   tags        = merge(var.tags, { purpose = "auth" })
+  policy_json = data.aws_iam_policy_document.auth_policy.json
 }
 
 module "bucket_info" {
