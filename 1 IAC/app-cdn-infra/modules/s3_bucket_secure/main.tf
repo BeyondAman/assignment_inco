@@ -43,3 +43,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
 output "bucket_name" { value = aws_s3_bucket.this.bucket }
 output "bucket_arn"  { value = aws_s3_bucket.this.arn }
 output "kms_key_arn" { value = try(aws_kms_key.cmk[0].arn, null) }
+output "bucket_regional_domain_name" {
+  description = "Regional domain name for the bucket (e.g. bucket.s3.us-east-1.amazonaws.com)"
+  value       = aws_s3_bucket.this.bucket_regional_domain_name
+}

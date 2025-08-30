@@ -18,7 +18,6 @@ resource "aws_cloudfront_distribution" "this" {
       domain_name              = origin.value.domain_name
       origin_id                = origin.key
       origin_path              = try(origin.value.origin_path, "")
-      origin_access_control_id = aws_cloudfront_origin_access_control.oac.id
     }
   }
 
