@@ -115,6 +115,29 @@ The solution is designed with the principle of **least privilege** at its core.
         * Denies unencrypted object uploads.
         * Gives `s3:ListBucket` permissions on the bucket level and `s3:GetObject`, `s3:PutObject`, `s3:DeleteObject` permissions on the `terraform.tfstate` file and its lock file to specific `allowed_role_arns`. This ensures that only authorized IAM roles can manage the Terraform state.
 ---
+## 7 Multi-Region & Reliability Improvements
+
+### Active-Passive Failover Configuration
+
+The can enhanced implements as **active-passive failover model** where:
+
+- **Primary regions** handle all traffic during normal operations
+- **Secondary regions** remain synchronized but passive
+- **MRAP failover controls** enable rapid switching during outages[45][46]
+- **Cross-region replication** maintains data consistency across regions[37][40]
+
+### Multi-Region Access Points Benefits
+
+**Global Endpoint Management:**
+- Single global endpoint per content type eliminates complex DNS management[39][42]
+- Automatic routing to closest available region reduces latency by up to 60%[39][42]
+- Built-in AWS Global Accelerator integration for optimal performance[39][42]
+
+**Disaster Recovery Capabilities:**
+- **Failover Controls:** Switch traffic between regions within minutes[45][46]
+- **Health Monitoring:** Automatic detection of regional failures[45][46]
+- **Manual Override:** Administrative control for planned maintenance[45][46]
+---
 ## 7. Deployment Steps
 To deploy this infrastructure across your environments, follow these general steps:
 1.  **Clone the Repository:**
