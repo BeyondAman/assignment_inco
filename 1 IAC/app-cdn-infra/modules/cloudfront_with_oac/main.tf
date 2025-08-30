@@ -13,6 +13,13 @@ resource "aws_cloudfront_distribution" "this" {
   price_class         = "PriceClass_100"
   default_root_object = "index.html" 
 
+  custom_error_response {
+    error_code            = 403
+    response_code         = 200
+    response_page_path    = "/index.html"
+    error_caching_min_ttl = 0
+  }
+
   dynamic "origin" {
     for_each = var.origins
     content {
