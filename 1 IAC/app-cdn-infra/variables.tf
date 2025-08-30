@@ -1,4 +1,12 @@
-variable "env"     { type = string }
+
+variable "env" {
+  type        = string
+  description = "The deployment environment (dev, stg, or prod)."
+  validation {
+    condition     = contains(["dev", "stg", "prod"], var.env)
+    error_message = "The 'env' variable must be one of 'dev', 'stg', or 'prod'."
+  }
+}
 
 variable "region"  { type = string }
 
